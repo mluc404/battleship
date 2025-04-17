@@ -1,4 +1,4 @@
-export function makeShip(length) {
+export function makeShip(length, name) {
   let hits = 0;
   let coordinates = [];
 
@@ -18,6 +18,7 @@ export function makeShip(length) {
 
   return {
     length,
+    name,
     hit,
     getHits,
     isSunk,

@@ -36,6 +36,10 @@ export function gameboard() {
     }
   };
 
+  const checkGameOver = () => {
+    return getShips().every((ship) => ship.isSunk());
+  };
+
   const getShips = () => {
     return ships;
   };
@@ -53,5 +57,6 @@ export function gameboard() {
     receiveAttack,
     getMissedAttacks,
     getHitAttacks,
+    checkGameOver,
   };
 }

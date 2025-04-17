@@ -15,9 +15,15 @@ describe("gameboard", () => {
     [2, 3],
   ];
 
+  const hitCoords1 = [1, 2];
+  const hitCoords2 = [1, 1];
+  const hitCoords3 = [1, 3];
+  const hitCoords4 = [2, 2];
+  const hitCoords5 = [2, 3];
+
   beforeEach(() => {
-    ship1 = makeShip(3);
-    ship2 = makeShip(2);
+    ship1 = makeShip(3, "sub");
+    ship2 = makeShip(2, "destroyer");
     board = gameboard();
 
     board.placeShip(ship1, ship1Coords);
@@ -31,10 +37,6 @@ describe("gameboard", () => {
   });
 
   test("receive attack", () => {
-    const hitCoords1 = [1, 2];
-    const hitCoords2 = [1, 1];
-    const hitCoords3 = [1, 3];
-
     board.receiveAttack(hitCoords1);
     expect(ship1.getHits()).toEqual(1);
     board.receiveAttack(hitCoords2);
@@ -47,8 +49,8 @@ describe("gameboard", () => {
     expect(ship2.getHits()).toEqual(0);
     expect(board.getMissedAttacks().length).toEqual(0);
 
-    const hitCoords4 = [1, 1];
-    expect(() => board.receiveAttack(hitCoords4)).toThrow();
+    const hitCoordsX = [1, 1];
+    expect(() => board.receiveAttack(hitCoordsX)).toThrow();
   });
 
   test("missed attack", () => {
@@ -56,5 +58,15 @@ describe("gameboard", () => {
 
     board.receiveAttack(hitCoords);
     expect(board.getMissedAttacks()).toEqual([[7, 7]]);
+  });
+
+  test("game over", () => {
+    board.receiveAttack(hitCoords1);
+    board.receiveAttack(hitCoords2);
+    board.receiveAttack(hitCoords3);
+    board.receiveAttack(hitCoords4);
+    board.receiveAttack(hitCoords5);
+
+    expect(board.checkGameOver()).toBe(true);
   });
 });
