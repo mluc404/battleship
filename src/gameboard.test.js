@@ -45,6 +45,10 @@ describe("gameboard", () => {
     expect(ship1.isSunk()).toEqual(true);
 
     expect(ship2.getHits()).toEqual(0);
+    expect(board.getMissedAttacks().length).toEqual(0);
+
+    const hitCoords4 = [1, 1];
+    expect(() => board.receiveAttack(hitCoords4)).toThrow();
   });
 
   test("missed attack", () => {
