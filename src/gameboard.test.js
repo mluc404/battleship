@@ -9,9 +9,6 @@ describe("gameboard", () => {
     [1, 2],
     [1, 1],
     [1, 3],
-    // [1, 2],
-    // [2, 2],
-    // [3, 3],
   ];
   const ship2Coords = [
     [2, 2],
@@ -19,7 +16,7 @@ describe("gameboard", () => {
   ];
 
   const ship3Coords = [
-    [2, 0],
+    [1, 1],
     [3, 0],
     [4, 0],
   ];
@@ -38,7 +35,8 @@ describe("gameboard", () => {
 
     board.placeShip(ship1, ship1Coords);
     board.placeShip(ship2, ship2Coords);
-    // board.placeShip(ship3, ship3Coords);
+
+    expect(() => board.placeShip(ship3, ship3Coords)).toThrow();
   });
 
   test("assign ship coordinate", () => {
@@ -50,25 +48,26 @@ describe("gameboard", () => {
   test("receive attack", () => {
     board.receiveAttack(hitCoords1);
     expect(ship1.getHits()).toEqual(1);
+    expect(board.getGrid()[hitCoords1[0]][hitCoords1[1]]).toEqual("hit");
+
     board.receiveAttack(hitCoords2);
     expect(ship1.getHits()).toEqual(2);
     expect(ship1.isSunk()).toEqual(false);
+
     board.receiveAttack(hitCoords3);
     expect(ship1.getHits()).toEqual(3);
     expect(ship1.isSunk()).toEqual(true);
 
     expect(ship2.getHits()).toEqual(0);
-    expect(board.getMissedAttacks().length).toEqual(0);
 
-    const hitCoordsX = [1, 1];
-    expect(() => board.receiveAttack(hitCoordsX)).toThrow();
+    expect(() => board.receiveAttack([1, 1])).toThrow();
+
+    expect(() => board.receiveAttack([10, -1])).toThrow();
   });
 
   test("missed attack", () => {
-    const hitCoords = [4, 4];
-
-    board.receiveAttack(hitCoords);
-    expect(board.getMissedAttacks()).toEqual([[4, 4]]);
+    board.receiveAttack([8, 9]);
+    expect(board.getGrid()[8][9]).toEqual("miss");
   });
 
   test("game over", () => {

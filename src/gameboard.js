@@ -8,10 +8,23 @@ export function gameboard() {
     .fill()
     .map(() => Array(COL).fill(null));
 
-  // Helper function to check if a target coords already existed
-  const containsCoordinate = (arr, target) => {
-    return arr.some(
-      (coord) => coord[0] === target[0] && coord[1] === target[1]
+  // Helper function to check if a coordinate is within the grid
+  const isWithinGrid = (coord) => {
+    return (
+      coord[0] >= 0 &&
+      coord[0] <= ROW - 1 &&
+      coord[1] >= 0 &&
+      coord[1] <= COL - 1
+    );
+  };
+
+  // Helper function to check if a coordinate is an array of 2 integers
+  const isArrOfTwoInt = (coord) => {
+    return (
+      Array.isArray(coord) &&
+      coord.length === 2 &&
+      Number.isInteger(coord[0]) &&
+      Number.isInteger(coord[1])
     );
   };
 
@@ -58,86 +71,77 @@ export function gameboard() {
       throw new Error("Coordinates must match the ship length");
 
     // Check if the arrays inside coords are length 2 and contain only integers
-    if (
-      !coords.every(
-        (coord) =>
-          Array.isArray(coord) &&
-          coord.length === 2 &&
-          Number.isInteger(coord[0]) &&
-          Number.isInteger(coord[1])
-      )
-    )
+    if (!coords.every((coord) => isArrOfTwoInt(coord)))
       throw new Error("Coordinates must be pairs of integers");
 
     // Check if coords are within the grid
-    const withinGrid = coords.every(
-      (coord) =>
-        coord[0] >= 0 &&
-        coord[0] <= ROW - 1 &&
-        coord[1] >= 0 &&
-        coord[1] <= COL - 1
-    );
+    const withinGrid = coords.every((coord) => isWithinGrid(coord));
     if (!withinGrid) throw new Error("Coordinates must be within the grid");
 
     // Check if coords are consecutively horizontal or vertical
     horizontalOrVertical(coords);
 
     // Check if coords overlap with existing ships in the grid
-    if (coords.some((coord) => grid[coord[1]][coord[0]] !== null))
-      throw new Error("Coordinates overlap with existing ship");
+    if (coords.some((coord) => grid[coord[0]][coord[1]] !== null))
+      throw new Error(
+        `Coordinates ${JSON.stringify(coords)}overlap with existing ship`
+      );
 
-    // Now we can place the ship with valid coordinates
+    // Now we can place the ship in the grird with valid coordinates
     ship.setCoordinates(coords);
     ships.push(ship);
-    // place the ship in the grid
     coords.forEach((coord) => {
       grid[coord[0]][coord[1]] = ship;
     });
-
-    // console.log(grid);
   };
 
-  // Function to handle an attack
+  // FUNCTION TO HANDLE ATTACK
   const receiveAttack = (attackCoords) => {
-    // first check if the attack coords is already used
-    const coordExist =
-      containsCoordinate(getHitAttacks(), attackCoords) ||
-      containsCoordinate(getMissedAttacks(), attackCoords);
-    if (coordExist) {
+    // Validate the attack coords
+    if (!isArrOfTwoInt(attackCoords) || !isWithinGrid(attackCoords))
+      throw new Error("Invalid attack coordinates");
+
+    if (
+      grid[attackCoords[0]][attackCoords[1]] === "hit" ||
+      grid[attackCoords[0]][attackCoords[1]] === "miss"
+    ) {
       throw new Error("Hit me baby one more time? No!");
+    } else if (grid[attackCoords[0]][attackCoords[1]] !== null) {
+      grid[attackCoords[0]][attackCoords[1]].hit();
+      grid[attackCoords[0]][attackCoords[1]] = "hit";
+      hitAttacks.push(attackCoords);
     } else {
-      let isHit = false;
-      getShips().forEach((ship) => {
-        if (containsCoordinate(ship.getCoordinates(), attackCoords)) {
-          ship.hit();
-          getHitAttacks().push(attackCoords);
-          isHit = true;
-          return;
-        }
-      });
-      if (!isHit) getMissedAttacks().push(attackCoords);
+      grid[attackCoords[0]][attackCoords[1]] = "miss";
+      missedAttacks.push(attackCoords);
     }
   };
 
-  const checkGameOver = () => {
-    return getShips().every((ship) => ship.isSunk());
+  // function to let UI access grid
+  const getGrid = () => {
+    return grid.map((row) => row);
   };
 
-  const getShips = () => {
-    return ships;
+  const getMissedAttacks = () => {
+    return missedAttacks;
   };
 
   const getHitAttacks = () => {
     return hitAttacks;
   };
 
-  const getMissedAttacks = () => {
-    return missedAttacks;
+  const checkGameOver = () => {
+    return ships.every((ship) => ship.isSunk());
   };
+
+  const getShips = () => {
+    return ships;
+  };
+
   return {
     placeShip,
     getShips,
     receiveAttack,
+    getGrid,
     getMissedAttacks,
     getHitAttacks,
     checkGameOver,

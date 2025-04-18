@@ -39,5 +39,14 @@ if (coords.every((coord) => coord[0] === coords[0][0])) {
   throw new Error(`${JSON.stringify(coords)} are not horizontal nor vertical`);
 }
 
-let x = [1, 2];
-console.log(x.toString());
+let x = [
+  ["hit", "miss", null],
+  [null, null, "miss"],
+];
+
+let n = x.map((row) => row.map((cell) => cell));
+console.log(n);
+
+let arr = [[{ hit: true }]];
+let deepCopy = JSON.parse(JSON.stringify(arr));
+console.log(deepCopy);
