@@ -54,10 +54,10 @@ describe("gameboard", () => {
   });
 
   test("missed attack", () => {
-    const hitCoords = [7, 7];
+    const hitCoords = [4, 4];
 
     board.receiveAttack(hitCoords);
-    expect(board.getMissedAttacks()).toEqual([[7, 7]]);
+    expect(board.getMissedAttacks()).toEqual([[4, 4]]);
   });
 
   test("game over", () => {
