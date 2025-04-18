@@ -2,17 +2,53 @@ export function gameboard() {
   const ships = [];
   const missedAttacks = [];
   const hitAttacks = [];
-  const row = 5;
-  const col = 5;
-  const grid = Array(row)
+  const ROW = 10;
+  const COL = 10;
+  const grid = Array(ROW)
     .fill()
-    .map(() => Array(col).fill(null));
+    .map(() => Array(COL).fill(null));
 
   // Helper function to check if a target coords already existed
   const containsCoordinate = (arr, target) => {
     return arr.some(
       (coord) => coord[0] === target[0] && coord[1] === target[1]
     );
+  };
+
+  // Helper function to check if coords are consecutively horizontal/vertical
+  const horizontalOrVertical = (coords) => {
+    // Check for duplicates inside coords
+    const coordSet = new Set();
+    coords.forEach((coord) => {
+      if (coordSet.has(coord.join("")))
+        throw new Error("Duplicates inside coordinates");
+      else {
+        coordSet.add(coord.join(""));
+      }
+    });
+
+    const coordsCopy = [...coords];
+    if (coords.every((coord) => coord[0] === coords[0][0])) {
+      coordsCopy.sort((a, b) => a[1] - b[1]);
+      for (let i = 1; i < coordsCopy.length; i++) {
+        if (coordsCopy[i][1] !== coordsCopy[i - 1][1] + 1)
+          throw new Error(
+            `${JSON.stringify(coordsCopy)} have gaps in vertical alignment`
+          );
+      }
+    } else if (coords.every((coord) => coord[1] === coords[0][1])) {
+      coordsCopy.sort((a, b) => a[0] - b[0]);
+      for (let i = 1; i < coordsCopy.length; i++) {
+        if (coordsCopy[i][0] !== coordsCopy[i - 1][0] + 1)
+          throw new Error(
+            `${JSON.stringify(coordsCopy)} have gaps in horizontal alignment`
+          );
+      }
+    } else {
+      throw new Error(
+        `${JSON.stringify(coords)} are not horizontal nor vertical`
+      );
+    }
   };
 
   // Function to place ships
@@ -37,53 +73,14 @@ export function gameboard() {
     const withinGrid = coords.every(
       (coord) =>
         coord[0] >= 0 &&
-        coord[0] <= row - 1 &&
+        coord[0] <= ROW - 1 &&
         coord[1] >= 0 &&
-        coord[1] <= col - 1
+        coord[1] <= COL - 1
     );
     if (!withinGrid) throw new Error("Coordinates must be within the grid");
 
-    // Check for duplicates inside coords
-    const coordSet = new Set();
-    coords.forEach((coord) => {
-      if (coordSet.has(coord.join("")))
-        throw new Error("Duplicates inside coordinates");
-      else {
-        coordSet.add(coord.join(""));
-      }
-    });
-
     // Check if coords are consecutively horizontal or vertical
-    let isHorizontal = null;
-    let isVertical = null;
-    coords.sort((a, b) => a[1] - b[1]);
-    for (let i = 1; i < coords.length; i++) {
-      if (
-        coords[i][0] !== coords[0][0] ||
-        coords[i][1] !== coords[i - 1][1] + 1
-      ) {
-        isHorizontal = false;
-        break;
-      }
-      isHorizontal = true;
-    }
-    if (!isHorizontal) {
-      coords.sort((a, b) => a[0] - b[0]);
-      for (let i = 1; i < coords.length; i++) {
-        if (
-          coords[i][1] !== coords[0][1] ||
-          coords[i][0] !== coords[i - 1][0] + 1
-        ) {
-          isVertical = false;
-          break;
-        }
-        isVertical = true;
-      }
-    }
-    if (!isVertical && !isHorizontal)
-      throw new Error(
-        "Coordinates must be consecutively horizontal or vertical"
-      );
+    horizontalOrVertical(coords);
 
     // Check if coords overlap with existing ships in the grid
     if (coords.some((coord) => grid[coord[1]][coord[0]] !== null))
@@ -94,10 +91,10 @@ export function gameboard() {
     ships.push(ship);
     // place the ship in the grid
     coords.forEach((coord) => {
-      grid[coord[0]][coord[1]] = ship.type;
+      grid[coord[0]][coord[1]] = ship;
     });
 
-    console.log(grid);
+    // console.log(grid);
   };
 
   // Function to handle an attack

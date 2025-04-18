@@ -6,9 +6,12 @@ describe("gameboard", () => {
   let board;
 
   const ship1Coords = [
-    [1, 1],
     [1, 2],
+    [1, 1],
     [1, 3],
+    // [1, 2],
+    // [2, 2],
+    // [3, 3],
   ];
   const ship2Coords = [
     [2, 2],
