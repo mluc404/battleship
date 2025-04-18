@@ -2,7 +2,7 @@ import { makeShip } from "./ship";
 import { gameboard } from "./gameboard";
 
 describe("gameboard", () => {
-  let ship1, ship2;
+  let ship1, ship2, ship3;
   let board;
 
   const ship1Coords = [
@@ -15,6 +15,12 @@ describe("gameboard", () => {
     [2, 3],
   ];
 
+  const ship3Coords = [
+    [2, 0],
+    [3, 0],
+    [4, 0],
+  ];
+
   const hitCoords1 = [1, 2];
   const hitCoords2 = [1, 1];
   const hitCoords3 = [1, 3];
@@ -24,10 +30,12 @@ describe("gameboard", () => {
   beforeEach(() => {
     ship1 = makeShip(3, "sub");
     ship2 = makeShip(2, "destroyer");
+    ship3 = makeShip(3, "cruiser");
     board = gameboard();
 
     board.placeShip(ship1, ship1Coords);
     board.placeShip(ship2, ship2Coords);
+    // board.placeShip(ship3, ship3Coords);
   });
 
   test("assign ship coordinate", () => {

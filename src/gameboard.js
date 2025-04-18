@@ -2,6 +2,11 @@ export function gameboard() {
   const ships = [];
   const missedAttacks = [];
   const hitAttacks = [];
+  const row = 5;
+  const col = 5;
+  const grid = Array(row)
+    .fill()
+    .map(() => Array(col).fill(null));
 
   // Helper function to check if a target coords already existed
   const containsCoordinate = (arr, target) => {
@@ -31,34 +36,48 @@ export function gameboard() {
     // Check if coords are within the grid
     const withinGrid = coords.every(
       (coord) =>
-        coord[0] >= 0 && coord[0] <= 9 && coord[1] >= 0 && coord[1] <= 9
+        coord[0] >= 0 &&
+        coord[0] <= row - 1 &&
+        coord[1] >= 0 &&
+        coord[1] <= col - 1
     );
     if (!withinGrid) throw new Error("Coordinates must be within the grid");
 
-    // Check if coords are consecutively vertical or horizontal
-    let isVertical, isHorizontal;
+    // Check for duplicates inside coords
+    const coordSet = new Set();
+    coords.forEach((coord) => {
+      if (coordSet.has(coord.join("")))
+        throw new Error("Duplicates inside coordinates");
+      else {
+        coordSet.add(coord.join(""));
+      }
+    });
+
+    // Check if coords are consecutively horizontal or vertical
+    let isHorizontal = null;
+    let isVertical = null;
+    coords.sort((a, b) => a[1] - b[1]);
     for (let i = 1; i < coords.length; i++) {
       if (
-        coords[i][0] === coords[0][0] &&
-        coords[i][1] === coords[i - 1][1] + 1
+        coords[i][0] !== coords[0][0] ||
+        coords[i][1] !== coords[i - 1][1] + 1
       ) {
-        isVertical = true;
-      } else {
-        isVertical = false;
+        isHorizontal = false;
         break;
       }
+      isHorizontal = true;
     }
-    if (!isVertical) {
+    if (!isHorizontal) {
+      coords.sort((a, b) => a[0] - b[0]);
       for (let i = 1; i < coords.length; i++) {
         if (
-          coords[i][1] === coords[0][1] &&
-          coords[i][0] === coords[i - 1][0] + 1
+          coords[i][1] !== coords[0][1] ||
+          coords[i][0] !== coords[i - 1][0] + 1
         ) {
-          isHorizontal = true;
-        } else {
-          isHorizontal = false;
+          isVertical = false;
           break;
         }
+        isVertical = true;
       }
     }
     if (!isVertical && !isHorizontal)
@@ -66,20 +85,19 @@ export function gameboard() {
         "Coordinates must be consecutively horizontal or vertical"
       );
 
-    // Check if coords overlap with existing ships
-    const isOverlap = getShips().some((ship) =>
-      ship
-        .getCoordinates()
-        .some((placedCoord) => containsCoordinate(coords, placedCoord))
-    );
+    // Check if coords overlap with existing ships in the grid
+    if (coords.some((coord) => grid[coord[1]][coord[0]] !== null))
+      throw new Error("Coordinates overlap with existing ship");
 
     // Now we can place the ship with valid coordinates
-    if (!isOverlap) {
-      ship.setCoordinates(coords);
-      ships.push(ship);
-    } else {
-      throw new Error(`${coords} is an invalid coordinate`);
-    }
+    ship.setCoordinates(coords);
+    ships.push(ship);
+    // place the ship in the grid
+    coords.forEach((coord) => {
+      grid[coord[0]][coord[1]] = ship.type;
+    });
+
+    console.log(grid);
   };
 
   // Function to handle an attack
