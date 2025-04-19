@@ -2,9 +2,7 @@ export function makeShip(length, type) {
   let hits = 0;
   let coordinates = [];
 
-  const hit = () => {
-    if (hits < length) return hits++;
-  };
+  const hit = () => hits++;
 
   const getHits = () => hits;
 

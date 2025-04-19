@@ -1,3 +1,20 @@
 body {
   background-color: skyblue;
 }
+
+.grid {
+  display: grid;
+  grid-template-rows: repeat(10, 50px);
+  grid-template-columns: repeat(10, 50px);
+  gap: 5px;
+}
+
+.cell {
+  background-color: #454d60;
+  transition: transform 0.2s ease-in-out;
+}
+
+.cell:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
