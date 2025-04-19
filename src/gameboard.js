@@ -114,6 +114,11 @@ export function gameboard() {
       grid[attackCoords[0]][attackCoords[1]] = "miss";
       missedAttacks.push(attackCoords);
     }
+
+    // check if game over
+    if (checkGameOver()) {
+      alert("Game Over");
+    }
   };
 
   // function to let UI access grid

@@ -1,6 +1,6 @@
 import { player } from "./player";
 import { makeShip } from "./ship";
-
+import { renderBoard } from "./ui";
 export function gameController() {
   // create 2 players (each player auto creates their own board)
   // Note: ships should also be generated inside player()
@@ -27,10 +27,21 @@ export function gameController() {
     [7, 6],
   ]);
 
+  renderBoard(humanBoard);
+
   console.log(humanBoard.getGrid());
+  console.log(typeof humanBoard.getGrid()[1][1]);
 
-  pcPlayer.attack(humanBoard, [1, 1]);
-  pcPlayer.attack(humanBoard, [1, 5]);
+  // while (!humanBoard.checkGameOver()) {
+  //   pcPlayer.attack(humanBoard);
+  // }
+  let timeOut = 1000;
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => pcPlayer.attack(humanBoard), timeOut);
+    timeOut += 1000;
+  }
 
-  console.table(humanBoard.getShips());
+  let arr = [[1, 2]];
+  arr.splice(0, 1);
+  console.log(arr.length);
 }
