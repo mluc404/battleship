@@ -1,6 +1,6 @@
 import { player } from "./player";
 
-export function renderGrid(board) {
+export function renderBoard(board) {
   const grid = document.querySelector(".grid");
   grid.innerHTML = "";
   const allCells = board.getGrid().flat();
@@ -13,10 +13,4 @@ export function renderGrid(board) {
     else if (square === "hit") cell.style.backgroundColor = "orange";
     else cell.style.backgroundColor = "blue";
   });
-  //   board.getGrid().forEach((row) =>
-  //     row.forEach((col) => {
-  //       const cell = document.createElement("div");
-  //       cell.classList.add("cell");
-  //       grid.appendChild(cell);
-  //     })
 }
