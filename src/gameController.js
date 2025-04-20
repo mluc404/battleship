@@ -9,11 +9,14 @@ export function gameController() {
   // then pc's turn. NOTE: find a way to generate random coordinates inside its attack method
   // repeat until 1 player has all their ships sunked
   const humanPlayer = player("human");
-  const pcPlayer = player("computer");
+  const computerPlayer = player("computer");
 
   const ship1 = makeShip(3, "sub");
   const ship2 = makeShip(4, "cruiser");
+  const ship3 = makeShip(3, "sub");
+  const ship4 = makeShip(4, "cruiser");
   const humanBoard = humanPlayer.getBoard();
+  const computerBoard = computerPlayer.getBoard();
 
   humanBoard.placeShip(ship1, [
     [1, 2],
@@ -27,21 +30,45 @@ export function gameController() {
     [7, 6],
   ]);
 
-  renderBoard(humanBoard);
+  computerBoard.placeShip(ship3, [
+    [1, 7],
+    [2, 7],
+    [3, 7],
+  ]);
+  computerBoard.placeShip(ship4, [
+    [9, 5],
+    [9, 6],
+    [9, 7],
+    [9, 8],
+  ]);
+  renderBoard(humanBoard, "human");
+  renderBoard(computerBoard, "computer");
 
   console.log(humanBoard.getGrid());
   console.log(typeof humanBoard.getGrid()[1][1]);
 
   // while (!humanBoard.checkGameOver()) {
-  //   pcPlayer.attack(humanBoard);
+  //   computerPlayer.attack(humanBoard);
   // }
-  let timeOut = 1000;
-  for (let i = 0; i < 10; i++) {
-    setTimeout(() => pcPlayer.attack(humanBoard), timeOut);
-    timeOut += 1000;
-  }
+  let timeOut = 200;
+  const testCompAttack = () => {
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        console.log("TURN # ", i);
+        computerPlayer.attack(humanBoard);
+      }, timeOut);
+      if (humanBoard.checkGameOver()) break;
+      timeOut += 200;
+    }
+  };
 
-  let arr = [[1, 2]];
-  arr.splice(0, 1);
-  console.log(arr.length);
+  // testCompAttack();
+
+  const computerGrid = document.querySelector(".computerGrid");
+  const allCompCells = computerGrid.querySelectorAll(".cell");
+  allCompCells.forEach((cell) => {
+    cell.addEventListener("mousedown", (e) => {
+      computerPlayer.attack(humanBoard);
+    });
+  });
 }

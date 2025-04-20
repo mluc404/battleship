@@ -2,19 +2,35 @@ body {
   background-color: skyblue;
 }
 
+.twoBoards {
+  display: flex;
+
+  gap: 20px;
+}
+
 .grid {
   display: grid;
-  grid-template-rows: repeat(10, 50px);
-  grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(10, 40px);
+  grid-template-columns: repeat(10, 40px);
   gap: 5px;
 }
 
 .cell {
   background-color: #454d60;
   transition: transform 0.2s ease-in-out;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .cell:hover {
   cursor: pointer;
   transform: scale(1.1);
+}
+
+.computerGrid .ship {
+  background-color: #965430;
+}
+
+.humanGrid .ship {
+  background-color: black;
 }
