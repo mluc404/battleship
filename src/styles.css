@@ -1,5 +1,6 @@
 body {
   background-color: skyblue;
+  --cell-water-color: #454d60;
 }
 
 .twoBoards {
@@ -28,7 +29,8 @@ body {
 }
 
 .computerGrid .ship {
-  background-color: #965430;
+  /* background-color: var(--cell-water-color); */
+  background-color: grey;
 }
 
 .humanGrid .ship {

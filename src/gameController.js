@@ -1,6 +1,6 @@
 import { player } from "./player";
 import { makeShip } from "./ship";
-import { renderBoard } from "./ui";
+import { renderBoard, renderCell } from "./ui";
 export function gameController() {
   // create 2 players (each player auto creates their own board)
   // Note: ships should also be generated inside player()
@@ -68,6 +68,10 @@ export function gameController() {
   const allCompCells = computerGrid.querySelectorAll(".cell");
   allCompCells.forEach((cell) => {
     cell.addEventListener("mousedown", (e) => {
+      // Upon click human attacks that cell on computer board
+      const [x, y] = e.target.attributes[1].value.split(",").map(Number);
+      humanPlayer.attack(computerBoard, [x, y]);
+      renderCell(computerBoard, [x, y]); // re-render the cell instead of the whole board
       // Computer counter attack
       computerPlayer.attack(humanBoard);
     });
