@@ -8,7 +8,7 @@ export function renderBoard(board) {
     gridDiv = document.querySelector(".computerGrid");
   }
   gridDiv.innerHTML = "";
-  // Need to make each cell div contain its coordinate and clicked-on status
+  // Make each cell div contain its coordinate and clicked-on status
   const grid = board.getGrid();
   for (let i = 0; i <= 9; i++) {
     for (let k = 0; k <= 9; k++) {
@@ -18,20 +18,19 @@ export function renderBoard(board) {
       cell.setAttribute("data-clicked", "no");
 
       // Set color for each type of cell: null, ship, hit, miss
-      if (grid[i][k] === null) cell.style.backgroundColor = "#454d60";
-      else if (typeof grid[i][k] === "object") {
+      // if (grid[i][k] === null) cell.style.backgroundColor = "#454d60";
+      if (typeof grid[i][k] === "object" && grid[i][k] !== null) {
         cell.classList.add("ship");
         cell.classList.add(grid[i][k].type);
       } else if (grid[i][k] === "hit") {
         cell.style.backgroundColor = "orange";
         cell.classList.add("hit");
-      } else {
-        cell.style.backgroundColor = "blue";
+      } else if (grid[i][k] === "miss") {
+        // cell.style.backgroundColor = "blue";
         cell.classList.add("miss");
       }
 
       // Add event listener to cells
-
       cell.addEventListener("mousedown", (e) => {});
 
       gridDiv.appendChild(cell);
@@ -68,7 +67,7 @@ export function renderCell(board, coords) {
     cell.style.backgroundColor = "orange";
     cell.classList.add("hit");
   } else {
-    cell.style.backgroundColor = "blue";
+    cell.style.backgroundColor = "#0076b0";
     cell.classList.add("miss");
   }
 }

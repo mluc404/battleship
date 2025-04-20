@@ -73,7 +73,7 @@ export function gameController() {
       humanPlayer.attack(computerBoard, [x, y]);
       renderCell(computerBoard, [x, y]); // re-render the cell instead of the whole board
       // Computer counter attack
-      computerPlayer.attack(humanBoard);
+      setTimeout(() => computerPlayer.attack(humanBoard), 500);
     });
   });
 }

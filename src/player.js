@@ -1,5 +1,5 @@
 import { gameboard } from "./gameboard";
-import { renderBoard } from "./ui";
+import { renderBoard, renderCell } from "./ui";
 
 export function player(type) {
   const board = gameboard(type);
@@ -20,9 +20,25 @@ export function player(type) {
   } else {
     attack = (opponentBoard) => {
       const grid = opponentBoard.getGrid();
-
       let rows = [...Array(10).keys()];
 
+      // Basic computer player intelligence, making random attack
+      while (typeof grid[coords[0]][coords[1]] !== "object") {
+        if (grid[coords[0]][coords[1]] === "hit") {
+          lastHit = [coords[0], coords[1]];
+          coords[0]++;
+          checkLeft = [lastHit[0], lastHit[1] - 1];
+          checkRight = [lastHit[0], lastHit[1] + 1];
+          checkUp = [lastHit[0] - 1, lastHit[1]];
+          checkDown = [lastHit[0] + 1, lastHit[1]];
+        } else {
+          coords[0] = Math.floor(Math.random() * ROW);
+          coords[1] = Math.floor(Math.random() * COL);
+        }
+      }
+
+      // IN PROGRESS: advanced computer player algorithm
+      // What to do next when it makes a hit
       // while (typeof grid[coords[0]][coords[1]] !== "object") {
       //   if (grid[coords[0]][coords[1]] === "hit") {
       //     lastHit = [coords[0], coords[1]];
@@ -82,22 +98,10 @@ export function player(type) {
       //   }
       // }
 
-      while (typeof grid[coords[0]][coords[1]] !== "object") {
-        if (grid[coords[0]][coords[1]] === "hit") {
-          lastHit = [coords[0], coords[1]];
-          coords[0]++;
-          checkLeft = [lastHit[0], lastHit[1] - 1];
-          checkRight = [lastHit[0], lastHit[1] + 1];
-          checkUp = [lastHit[0] - 1, lastHit[1]];
-          checkDown = [lastHit[0] + 1, lastHit[1]];
-        } else {
-          coords[0] = Math.floor(Math.random() * ROW);
-          coords[1] = Math.floor(Math.random() * COL);
-        }
-      }
       console.log("pc attacks at ", coords);
       opponentBoard.receiveAttack(coords);
-      renderBoard(opponentBoard);
+      renderCell(opponentBoard, coords);
+      // renderBoard(opponentBoard);
     };
   }
   const getBoard = () => {

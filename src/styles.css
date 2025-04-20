@@ -1,12 +1,44 @@
-body {
-  background-color: skyblue;
+:root {
   --cell-water-color: #454d60;
+  --text-color: #82b8ff;
+  --bg-color: #010619;
+  --cell-human-color: #919fc0;
+  --cell-comp-color: #7a6363;
+  --cell-water-color: #028fd6;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: var(--text-color);
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #ac5d03;
 }
 
 .twoBoards {
   display: flex;
-
   gap: 20px;
+  color: var(--text-color);
+}
+
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+}
+
+.boardName {
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .grid {
@@ -17,15 +49,24 @@ body {
 }
 
 .cell {
-  background-color: #454d60;
-  transition: transform 0.2s ease-in-out;
+  background-color: #919fc0;
+  /* transition: transform 0.2s ease-in-out; */
   text-align: center;
   font-size: 1rem;
 }
 
+.computerGrid .cell {
+  background-color: var(--cell-comp-color);
+}
+
 .cell:hover {
   cursor: pointer;
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
+  background-color: #636c82;
+}
+
+.miss {
+  background-color: var(--cell-water-color);
 }
 
 .computerGrid .ship {
