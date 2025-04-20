@@ -2,10 +2,10 @@ import { gameboard } from "./gameboard";
 import { renderBoard } from "./ui";
 
 export function player(type) {
-  const board = gameboard();
+  const board = gameboard(type);
   const ROW = 9;
   const COL = 9;
-  renderBoard(board, type);
+  renderBoard(board);
   let coords = [0, 0];
   let lastHit;
   let checkLeft, checkRight, checkUp, checkDown;
@@ -15,7 +15,7 @@ export function player(type) {
   if (type === "human") {
     attack = (opponentBoard, inputCoords) => {
       opponentBoard.receiveAttack(inputCoords);
-      renderBoard(opponentBoard, "computer");
+      // renderBoard(opponentBoard, "computer");
     };
   } else {
     attack = (opponentBoard) => {
@@ -97,7 +97,7 @@ export function player(type) {
       }
       console.log("pc attacks at ", coords);
       opponentBoard.receiveAttack(coords);
-      renderBoard(opponentBoard, "human");
+      renderBoard(opponentBoard);
     };
   }
   const getBoard = () => {

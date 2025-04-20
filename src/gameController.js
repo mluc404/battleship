@@ -44,8 +44,8 @@ export function gameController() {
   renderBoard(humanBoard, "human");
   renderBoard(computerBoard, "computer");
 
-  console.log(humanBoard.getGrid());
-  console.log(typeof humanBoard.getGrid()[1][1]);
+  // console.log(humanBoard.getGrid());
+  // console.log(typeof humanBoard.getGrid()[1][1]);
 
   // while (!humanBoard.checkGameOver()) {
   //   computerPlayer.attack(humanBoard);
@@ -68,6 +68,7 @@ export function gameController() {
   const allCompCells = computerGrid.querySelectorAll(".cell");
   allCompCells.forEach((cell) => {
     cell.addEventListener("mousedown", (e) => {
+      // Computer counter attack
       computerPlayer.attack(humanBoard);
     });
   });

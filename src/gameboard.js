@@ -1,4 +1,4 @@
-export function gameboard() {
+export function gameboard(belongTo) {
   const ships = [];
   const missedAttacks = [];
   const hitAttacks = [];
@@ -143,6 +143,7 @@ export function gameboard() {
   };
 
   return {
+    belongTo,
     placeShip,
     getShips,
     receiveAttack,
