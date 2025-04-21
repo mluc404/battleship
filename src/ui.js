@@ -1,68 +1,37 @@
-import { player } from "./player";
+const humanGridDiv = document.querySelector(".humanGrid");
+const computerGridDiv = document.querySelector(".computerGrid");
 
 export function renderBoard(board) {
-  let gridDiv;
-  if (board.belongTo === "human") {
-    gridDiv = document.querySelector(".humanGrid");
-  } else {
-    gridDiv = document.querySelector(".computerGrid");
-  }
+  const gridDiv = board.belongTo === "human" ? humanGridDiv : computerGridDiv;
+  let ROW = 9;
+  let COL = 9;
   gridDiv.innerHTML = "";
   // Make each cell div contain its coordinate and clicked-on status
   const grid = board.getGrid();
-  for (let i = 0; i <= 9; i++) {
-    for (let k = 0; k <= 9; k++) {
+  for (let i = 0; i <= ROW; i++) {
+    for (let k = 0; k <= COL; k++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
       cell.setAttribute("data-coord", [i, k].join(","));
       cell.setAttribute("data-clicked", "no");
 
-      // Set color for each type of cell: null, ship, hit, miss
-      // if (grid[i][k] === null) cell.style.backgroundColor = "#454d60";
+      // Set type of ship for cell div class
       if (typeof grid[i][k] === "object" && grid[i][k] !== null) {
         cell.classList.add("ship");
         cell.classList.add(grid[i][k].type);
-      } else if (grid[i][k] === "hit") {
-        cell.style.backgroundColor = "orange";
-        cell.classList.add("hit");
-      } else if (grid[i][k] === "miss") {
-        // cell.style.backgroundColor = "blue";
-        cell.classList.add("miss");
       }
-
-      // Add event listener to cells
-      cell.addEventListener("mousedown", (e) => {});
-
       gridDiv.appendChild(cell);
     }
   }
-
-  // const allCells = board.getGrid().flat();
-
-  // allCells.forEach((square) => {
-  //   const cell = document.createElement("div");
-  //   cell.classList.add("cell");
-  //   gridDiv.appendChild(cell);
-  //   if (square === null) cell.style.backgroundColor = "#454d60";
-  //   else if (typeof square === "object") {
-  //     cell.classList.add("ship");
-  //   } else if (square === "hit") cell.style.backgroundColor = "orange";
-  //   else cell.style.backgroundColor = "blue";
-  // });
 }
-
+// Function to re-render each cell after an attack
 export function renderCell(board, coords) {
-  let gridDiv;
-  if (board.belongTo === "human") {
-    gridDiv = document.querySelector(".humanGrid");
-  } else {
-    gridDiv = document.querySelector(".computerGrid");
-  }
+  const gridDiv = board.belongTo === "human" ? humanGridDiv : computerGridDiv;
   const grid = board.getGrid();
   const cell = gridDiv.querySelector(`[data-coord="${coords.join(",")}"]`);
   cell.setAttribute("data-clicked", "yes");
-  console.log(cell);
 
+  // Add class to identify cell type and update its color
   if (grid[coords[0]][coords[1]] === "hit") {
     cell.style.backgroundColor = "orange";
     cell.classList.add("hit");

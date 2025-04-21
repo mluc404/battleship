@@ -5,17 +5,18 @@ export function player(type) {
   const board = gameboard(type);
   const ROW = 9;
   const COL = 9;
-  renderBoard(board);
   let coords = [0, 0];
   let lastHit;
   let checkLeft, checkRight, checkUp, checkDown;
   let possibleMoves = [];
 
+  // Render intitial board
+  renderBoard(board);
   let attack;
   if (type === "human") {
     attack = (opponentBoard, inputCoords) => {
       opponentBoard.receiveAttack(inputCoords);
-      // renderBoard(opponentBoard, "computer");
+      renderCell(opponentBoard, inputCoords); // only re-render that specific cell
     };
   } else {
     attack = (opponentBoard) => {
@@ -101,7 +102,6 @@ export function player(type) {
       console.log("pc attacks at ", coords);
       opponentBoard.receiveAttack(coords);
       renderCell(opponentBoard, coords);
-      // renderBoard(opponentBoard);
     };
   }
   const getBoard = () => {

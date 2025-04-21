@@ -2,11 +2,11 @@ import { player } from "./player";
 import { makeShip } from "./ship";
 import { renderBoard, renderCell } from "./ui";
 export function gameController() {
-  // create 2 players (each player auto creates their own board)
+  // create 2 players (each player() creates their own board)
   // Note: ships should also be generated inside player()
   // So now we have: 2 players, 2 boards, all ships placed
   // human makes the first move
-  // then pc's turn. NOTE: find a way to generate random coordinates inside its attack method
+  // then pc's turn. NOTE: WIP: advance computer player strategy in player()
   // repeat until 1 player has all their ships sunked
   const humanPlayer = player("human");
   const computerPlayer = player("computer");
@@ -44,12 +44,19 @@ export function gameController() {
   renderBoard(humanBoard, "human");
   renderBoard(computerBoard, "computer");
 
-  // console.log(humanBoard.getGrid());
-  // console.log(typeof humanBoard.getGrid()[1][1]);
+  const computerGrid = document.querySelector(".computerGrid");
+  const allCompCells = computerGrid.querySelectorAll(".cell");
+  allCompCells.forEach((cell) => {
+    cell.addEventListener("mousedown", (e) => {
+      // Click on a cell will trigger attack and re-render that call
+      const [x, y] = e.target.attributes[1].value.split(",").map(Number);
+      humanPlayer.attack(computerBoard, [x, y]);
+      // Computer counter attack
+      setTimeout(() => computerPlayer.attack(humanBoard), 500);
+    });
+  });
 
-  // while (!humanBoard.checkGameOver()) {
-  //   computerPlayer.attack(humanBoard);
-  // }
+  // IN PROGRESS: Testing advance strategy for computer player
   let timeOut = 200;
   const testCompAttack = () => {
     for (let i = 0; i < 30; i++) {
@@ -61,19 +68,5 @@ export function gameController() {
       timeOut += 200;
     }
   };
-
   // testCompAttack();
-
-  const computerGrid = document.querySelector(".computerGrid");
-  const allCompCells = computerGrid.querySelectorAll(".cell");
-  allCompCells.forEach((cell) => {
-    cell.addEventListener("mousedown", (e) => {
-      // Upon click human attacks that cell on computer board
-      const [x, y] = e.target.attributes[1].value.split(",").map(Number);
-      humanPlayer.attack(computerBoard, [x, y]);
-      renderCell(computerBoard, [x, y]); // re-render the cell instead of the whole board
-      // Computer counter attack
-      setTimeout(() => computerPlayer.attack(humanBoard), 500);
-    });
-  });
 }

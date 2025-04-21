@@ -2,9 +2,9 @@
   --cell-water-color: #454d60;
   --text-color: #82b8ff;
   --bg-color: #010619;
-  --cell-human-color: #919fc0;
-  --cell-comp-color: #7a6363;
-  --cell-water-color: #028fd6;
+  --cell-human-color: #027760;
+  --cell-comp-color: #7b5d5d;
+  --cell-water-color: #089feb;
 }
 
 body {
@@ -21,11 +21,14 @@ body {
 
 h1 {
   color: #ac5d03;
+  font-size: 3rem;
 }
 
 .twoBoards {
+  width: 80%;
   display: flex;
-  gap: 20px;
+  justify-content: center;
+  gap: 10%;
   color: var(--text-color);
 }
 
@@ -49,8 +52,7 @@ h1 {
 }
 
 .cell {
-  background-color: #919fc0;
-  /* transition: transform 0.2s ease-in-out; */
+  background-color: var(--cell-human-color);
   text-align: center;
   font-size: 1rem;
 }
@@ -61,18 +63,12 @@ h1 {
 
 .cell:hover {
   cursor: pointer;
-  /* transform: scale(1.1); */
   background-color: #636c82;
 }
 
-.miss {
-  background-color: var(--cell-water-color);
-}
-
-.computerGrid .ship {
-  /* background-color: var(--cell-water-color); */
-  background-color: grey;
-}
+/* .computerGrid .ship {
+  background-color: var(--cell-human-color);
+} */
 
 .humanGrid .ship {
   background-color: black;
